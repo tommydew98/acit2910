@@ -61,3 +61,10 @@ export function getMenuFor(category) {
         category: category
     }
 }
+
+export function populateItems(data){
+    return{
+        type: "POPULATE_ITEM",
+        payload:data
+    }
+}

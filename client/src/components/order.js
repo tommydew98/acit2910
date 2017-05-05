@@ -4,6 +4,9 @@ import Welcome from '../containers/order/welcome';
 import OrderBoard from '../components/order-board';
 import OrderProcessing from '../components/order-processing';
 import Banner from './banner';
+import populateItem from '../actions/order';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 //these stuffs are needed for the store where all the data
 //needed for this page are kept so every component can access them
@@ -17,6 +20,8 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 //create a store when all data related to order page are stored
 const store = createStore(allReducers);
+const io = require("socket.io-client");
+const socket = io();
 
 /**
  * Order layout/board. This is also a dumb class (class only made for layout)
@@ -26,6 +31,7 @@ class Order extends Component {
     //same with others
     constructor() {
         super();
+
         this.state = {
             currentView: "welcome"
         }
@@ -35,6 +41,16 @@ class Order extends Component {
 
     changeView(view) {
         this.setState({currentView: view});
+    }
+
+    componentDidMount() {
+
+        socket.emit("getItems" );
+        socket.on("sendData", function(data){
+            console.log("somteing");
+            this.props.populateItem(data);
+            console.log(data);
+        });
     }
 
     render() {
@@ -72,6 +88,12 @@ class Order extends Component {
             )
     }
 }
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({
+        populateItem:populateItem
+    }, dispatch)
+
+}
 
 
-            export default Order;
+            export default connect(null, mapDispatchToProps)(Order);

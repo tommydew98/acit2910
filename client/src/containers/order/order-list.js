@@ -7,12 +7,18 @@ import {bindActionCreators} from 'redux';
 import '../../css/order/menu.css'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
+const io = require("socket.io-client");
+const socket = io();
 /**
  * This components shows all the items that
  * the customer have ordered
  * */
 class OrderList extends Component {
 
+    constructor(){
+        super();
+        socket.emit("clearButton");
+    }
 
     //TODO need to implement this
     confirmAndSubmitOrder() {
